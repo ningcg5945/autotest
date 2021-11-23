@@ -1,9 +1,5 @@
 # -*- coding:utf-8 -*-
-#####################################
-#×÷Õß£º×Ş»Ô¡¶×Ô¶¯»¯Æ½Ì¨²âÊÔ¿ª·¢¡·Êé
-#ÈÕÆÚ£º2018Äê1ÔÂ
-#°æ±¾£ºautotestplat V1.0
-#####################################
+
 from django.shortcuts import render
 from bug.models import Bug
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -11,26 +7,29 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.contrib.auth import authenticate, login
 
-#bug¹ÜÀí
+
+# bugç®¡ç†
 def bug_manage(request):
     username = request.session.get('user', '')
     bug_list = Bug.objects.all()
-    bug_count = Bug.objects.all().count()  #Í³¼ÆbugÊı
-    paginator = Paginator(bug_list, 8)  #Éú³Épaginator¶ÔÏó,ÉèÖÃÃ¿Ò³ÏÔÊ¾8Ìõ¼ÇÂ¼
-    page = request.GET.get('page',1)  #»ñÈ¡µ±Ç°µÄÒ³ÂëÊı,Ä¬ÈÏÎªµÚ1Ò³
-    currentPage=int(page)  #°Ñ»ñÈ¡µÄµ±Ç°Ò³ÂëÊı×ª»»³ÉÕûÊıÀàĞÍ
+    bug_count = Bug.objects.all().count()  # ç»Ÿè®¡bugæ•°
+    paginator = Paginator(bug_list, 8)  # ç”Ÿæˆpaginatorå¯¹è±¡,è®¾ç½®æ¯é¡µæ˜¾ç¤º8æ¡è®°å½•
+    page = request.GET.get('page', 1)  # è·å–å½“å‰çš„é¡µç æ•°,é»˜è®¤ä¸ºç¬¬1é¡µ
+    currentPage = int(page)  # æŠŠè·å–çš„å½“å‰é¡µç æ•°è½¬æ¢æˆæ•´æ•°ç±»å‹
     try:
-        bug_list = paginator.page(page)#»ñÈ¡µ±Ç°Ò³ÂëÊıµÄ¼ÇÂ¼ÁĞ±í
+        bug_list = paginator.page(page)  # è·å–å½“å‰é¡µç æ•°çš„è®°å½•åˆ—è¡¨
     except PageNotAnInteger:
-        bug_list = paginator.page(1)#Èç¹ûÊäÈëµÄÒ³Êı²»ÊÇÕûÊıÔòÏÔÊ¾µÚ1Ò³µÄÄÚÈİ
+        bug_list = paginator.page(1)  # å¦‚æœè¾“å…¥çš„é¡µæ•°ä¸æ˜¯æ•´æ•°åˆ™æ˜¾ç¤ºç¬¬1é¡µçš„å†…å®¹
     except EmptyPage:
-        bug_list = paginator.page(paginator.num_pages)#Èç¹ûÊäÈëµÄÒ³Êı²»ÔÚÏµÍ³µÄÒ³ÊıÖĞÔòÏÔÊ¾×îºóÒ»Ò³µÄÄÚÈİ
-    return render(request, "bug_manage.html", {"user": username,"bugs": bug_list,"bugcounts": bug_count}) #°ÑÖµ¸³¸øbugcountsÕâ¸ö±äÁ¿
+        bug_list = paginator.page(paginator.num_pages)  # å¦‚æœè¾“å…¥çš„é¡µæ•°ä¸åœ¨ç³»ç»Ÿçš„é¡µæ•°ä¸­åˆ™æ˜¾ç¤ºæœ€åä¸€é¡µçš„å†…å®¹
+    return render(request, "bug_manage.html",
+                  {"user": username, "bugs": bug_list, "bugcounts": bug_count})  # æŠŠå€¼èµ‹ç»™bugcountsè¿™ä¸ªå˜é‡
 
-# ËÑË÷¹¦ÄÜ
+
+# æœç´¢åŠŸèƒ½
 @login_required
 def bugsearch(request):
-    username = request.session.get('user', '') # ¶ÁÈ¡ä¯ÀÀÆ÷µÇÂ¼session
+    username = request.session.get('user', '')  # è¯»å–æµè§ˆå™¨ç™»å½•session
     search_bugname = request.GET.get("bugname", "")
-    bug_list = Bug.objects.filter(bugname__icontains=search_bugname) 
-    return render(request,'bug_manage.html', {"user": username,"bugs":bug_list})
+    bug_list = Bug.objects.filter(bugname__icontains=search_bugname)
+    return render(request, 'bug_manage.html', {"user": username, "bugs": bug_list})

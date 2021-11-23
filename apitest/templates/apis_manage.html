@@ -1,12 +1,10 @@
 ﻿<html lang="zh-CN">
-<!---------------------------------------------------------------------------
-作者：邹辉《自动化平台测试开发》书；日期：2018年1月；版本：autotestplat V1.0
------------------------------------------------------------------------------>
+
 <head>
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
-<title>产品自动化测试管理平台</title>
+<title>自动化测试平台</title>
 <link href="../static/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css" />
 
@@ -53,6 +51,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;
 <ul class="nav justify-content-center">  
 </ul>
+
 <ul class="nav justify-content-end" style="position:absolute; right:10px; bottom:0px; ">
 <li class="nav-link"><a style='color:white' href="#">{{user}}</a></li>
 <li class="nav-link"><a style='color:white' href="/logout/">退出</a></li>
@@ -61,10 +60,13 @@
 </nav>
 <!-- 搜索栏-->
 <div class="page-header" style="padding-top: 0px;">
-<form class="navbar-form" method="get" action="/apissearch/"> 
+<form class="navbar-form" method="get" action="/apissearch/">
+ 
 {% csrf_token %}     
-<input type="search" name="apiname" placeholder="名称" required>  
-<button type="submit">搜索</button>   
+<input type="search" name="apiname" placeholder="名称" required>
+  
+<button type="submit">搜索</button>
+   
 <!-- 增加api单一接口测试用例-->
 <div style="float:right;width:65%">
 

@@ -82,13 +82,13 @@ td {
 <tr>
 <td>{{ bug.id }}</td>
 <td>{{ bug.Product.productname }}</td>
-<td>{{ bug.bugname }}</td>
+<td title="{{ bug.bugname }}">{{ bug.bugname }}</td>
 <td title="{{ bug.bugdetail }}">{{ bug.bugdetail }}</td>
 <td>{{ bug.bugstatus }}</td>
 <td>{{ bug.buglevel }}</td>
 <td>{{ bug.bugcreater }}</td>
 <td>{{ bug.bugassign  }}</td>
-<td>{{ bug.created_time }}</td>
+<td title="{{ bug.created_time }}">{{ bug.created_time }}</td>
 <td><a style='color:light blue' class="related-widget-wrapper-link add-related" id="add_id_Bug" href="../admin/bug/bug/{{ bug.id  }}/change/?_to_field=id&_popup=1"><img src="/static/admin/img/icon-changelink.svg"/></a></td>
 <td><a style='color:light blue' class="related-widget-wrapper-link add-related" id="add_id_Bug" href="../admin/bug/bug/{{ bug.id  }}/delete/?_to_field=id&_popup=1"><img src="/static/admin/img/icon-deletelink.svg"/></a></td>
 </tr>

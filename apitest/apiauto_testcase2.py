@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# re模块是python独有的匹配字符串的模块，该模块中提供的很多功能是基于正则表达式实现的，而正则表达式是对字符串进行模糊匹配，提取自己需要的字符串部分，他对所有的语言都通用
+# re正则表达式模块还包括一些有用的操作正则表达式的函数
 # requests模块，支持HTTP连接保持和连接池，支持使用cookie保持会话，支持文件上传，支持自动响应内容的编码，支持国际化的URL和POST数据自动编码
 # time模块，提供各种操作时间的函数
 import requests, time, re
@@ -24,10 +24,10 @@ def test_readSQLcase():
     cursor = coon.cursor()
     # 执行一个SQL语句
     aa = cursor.execute(sql)
-    # 获取返回所有数据
-    info = cursor.fetchall()
-    # 获取返回的aa数据
-    # info = cursor.fetchmany(aa)
+    # fetchall获取返回所有数据
+    # info = cursor.fetchall()
+    # fetchmany获取返回的aa数据
+    info = cursor.fetchmany(aa)
     # 打印获取返回的数据
     print(info)
     # for循环，遍历info的数据字符串过程中，迭代变量 ii 会先后被赋值为 info 的数据字符串中的每个字符，并代入循环体中使用
@@ -50,35 +50,57 @@ def interfaceTest(case_list):
     res_flags = []
     request_urls = []
     responses = []
+    # compile函数，compile(pattern[,flags] ) 根据包含正则表达式的字符串创建模式对象；将 seturl 函数方法中查询的 info 值转换为字符string类型
     strinfo = re.compile('{seturl}')
+    # for循环，遍历 case_list 的数组数据字符串过程中，迭代变量 case 会先后被赋值为 info 的数组数据字符串中的每个字符，并代入循环体中使用
     for case in case_list:
+        # 尝试执行的代码，正常就走try，异常走except
         try:
+            # 将赋值后的 case 数组数据字符串,在用数组排列，并赋值给 case_id 等变量名
             case_id = case[0]
             interface_name = case[1]
-            method = case[3]
             url = case[2]
+            method = case[3]
             param = case[4]
             res_check = case[5]
+        # 如果case值不[0]~[5]范围内，则执行except异常
         except Exception as e:
+            # return 语句是 except 异常时返回的数值 e ,并赋值给对应的异常case值中
             return '测试用例格式不正确！%s' % e
+        # if...elif...else 语句判断 param 值
         if param == '':
+            # 为''时，new_url 变量值为 http://api.test.com.cn + url
             new_url = 'http://' + 'api.test.com.cn' + url
         elif param == 'null':
+            # 为'null'时，变量名 url 为 seturl 函数方法中查询替换后的值；sub()方法进行查询和替换，str 为类型定义
             url = strinfo.sub(str(seturl('seturl')), url)
+            # url 值为seturl函数方法中查询替换后的值
             new_url = 'http://' + url
         else:
+            # 为 其它 时，变量名 url 为 seturl 函数方法中查询替换后的值；sub()方法进行查询和替换，str 为类型定义
             url = strinfo.sub(str(seturl('seturl')), url)
+            # new_url 变量值为 http://127.0.0.1 + url，其中url值为seturl函数方法中查询替换后的值
             new_url = 'http://' + '127.0.0.1' + url
+            # request_urls 空数组中，添加新的 new_url ；append()方法用于在列表末尾添加新的对象
             request_urls.append(new_url)
+        # if 语句判断 method 值，upper() 方法将字符串中的小写字母转为大写字母
         if method.upper() == 'GET':
+            # 设定 headers 变量名的头部信息
             headers = {'Authorization': '', 'Content-Type': 'application/json'}
-            if "=" in urlParam(param):
+            # in成员运算符如果在指定的序列中找到值返回 True，否则返回 False；if...else 语句，判断“=”是否在 urlParam(param) 函数方法中
+            if '=' in urlParam(param):
+                # 定义 data 参数无
                 data = None
-                print(
-                    str(case_id) + ' request is get' + new_url.encode('utf-8') + '?' + urlParam(param).encode('utf-8'))
+                # encode()函数：以指定的编码格式编码字符串，默认编码为 'utf-8'；语法：str.encode(encoding='utf-8', errors='strict')
+                # encoding 参数可选，即要使用的编码，默认编码为 'utf-8'。字符串编码常用类型有：utf-8,gb2312,cp936,gbk等
+                # errors 参数可选，设置不同错误的处理方案。默认为 'strict',意为编码错误引起一个UnicodeEncodeError。 其它可能值有 'ignore', 'replace', 'xmlcharrefreplace'以及通过 codecs.register_error() 注册其它的值。
+                print(str(case_id) + ' request is get' + str(new_url.encode('utf-8')) + '?' + str(urlParam(param).encode('utf-8')))
+                # requests是简单易用的HTTP库；GET：请求指定的页面信息，并返回实体主体；text输出文本信息
                 results = requests.get(new_url + '?' + urlParam(param), data, headers=headers).text
-                print(' response is get' + results.encode('utf-8'))
+                print(' response is get' + str(new_url.encode('utf-8')))
+                # responses 空数组中，添加 results 值；append()方法用于在列表末尾添加新的对象
                 responses.append(results)
+                #
                 res = readRes(results, '')
             else:
                 print(' request is get ' + new_url + ' body is ' + urlParam(param))
@@ -87,10 +109,12 @@ def interfaceTest(case_list):
                 # Request请求方法，url 参数是请求链接，这个是必传参数，其他的都是可选参数；data 参数跟 urlopen() 中的 data 参数用法相同；
                 # headers 参数是指定发起的 HTTP 请求的头部信息；method 参数指的是发起的 HTTP 请求的方式
                 req = urllib.request.Request(url=new_url, data=data, headers=headers, method="GET")
+                # 尝试执行的代码，正常就走try，异常走except
                 try:
-                    # 获取到 req 页面的源代码
+                    # urlopen方法，获取到 req 页面的源代码
                     results = urllib.request.urlopen(req).read()
                     print(' response is get ')
+                    # 打印获取到的 req 页面的源代码
                     print(results)
                 except Exception as e:
                     return caseWriteResult(case_id, '0')
@@ -103,6 +127,30 @@ def interfaceTest(case_list):
                     res_flags.append('fail')
                     writeResult(case_id, '0')
                     caseWriteResult(case_id, '0')
+                    writeBug(case_id, interface_name, new_url, results, res_check)
+
+        if method.upper() == "POST":
+            headers = {'Authorization': 'Credential ' + id, 'Content-Type': 'application/json'}
+            if "=" in urlParam(param):
+                data = None
+                results = requests.patch(new_url + '?' + urlParam(param), data, headers=headers).text
+                print(' response is post' + str(results.encode('utf-8')))
+                responses.append(results)
+                res = readRes(results, '')
+            else:
+                print(
+                    str(case_id) + ' request is ' + str(new_url.encode('utf-8')) + ' body is ' + urlParam(param).encode(
+                        'utf - 8'))
+                results = requests.post(new_url, data=urlParam(param).encode('utf-8'), headers=headers).text
+                print(' response is post' + str(results.encode('utf-8')))
+                responses.append(results)
+                res = readRes(results, res_check)
+                if 'pass' == res:
+                    writeResult(case_id, '1')
+                    res_flags.append('pass')
+                else:
+                    res_flags.append('fail')
+                    writeResult(case_id, '0')
                     writeBug(case_id, interface_name, new_url, results, res_check)
 
         if method.upper() == 'PUT':
@@ -134,29 +182,6 @@ def interfaceTest(case_list):
                 writeResult(case_id, 'fail')
                 writeBug(case_id, interface_name, new_url, results, res_check)
 
-        if method.upper() == "POST":
-            headers = {'Authorization': 'Credential ' + id, 'Content-Type': 'application/json'}
-            if "=" in urlParam(param):
-                data = None
-                results = requests.patch(new_url + '?' + urlParam(param), data, headers=headers).text
-                print(' response is post' + results.encode('utf-8'))
-                responses.append(results)
-                res = readRes(results, '')
-            else:
-                print(str(case_id) + ' request is ' + new_url.encode('utf-8') + ' body is ' + urlParam(param).encode(
-                    'utf - 8'))
-                results = requests.post(new_url, data=urlParam(param).encode('utf-8'), headers=headers).text
-                print(' response is post' + results.encode('utf-8'))
-                responses.append(results)
-                res = readRes(results, res_check)
-            if 'pass' == res:
-                writeResult(case_id, '1')
-                res_flags.append('pass')
-            else:
-                res_flags.append('fail')
-                writeResult(case_id, '0')
-                writeBug(case_id, interface_name, new_url, results, res_check)
-
 
 def readRes(res, res_check):
     res = res.decode().replace('":"', "=").replace('":', "=")
@@ -169,8 +194,11 @@ def readRes(res, res_check):
     return 'pass'
 
 
+# 定义urlParam函数方法，变量名为param值为param = case[4]
 def urlParam(param):
+    # replace() 方法把字符串中的 old（旧字符串） 替换成 new(新字符串)，如果指定第三个参数max，则替换不超过 max 次;replace()方法语法：str.replace(old, new[, max])
     param1 = param.replace('&quot;', '"')
+    # return 语句，返回变量名 param1 的值，并赋值给urlParam函数方法的param值中
     return param1
 
 

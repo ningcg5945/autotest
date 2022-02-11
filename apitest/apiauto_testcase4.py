@@ -1,14 +1,11 @@
 # -*- coding:utf-8 -*-
-import requests, time, sys, re
-import urllib, zlib  # ,
+import requests, time, re
+import urllib  # ,
 import pymysql
-import HTMLTestRunner
+from config import HTMLTestRunner
 import unittest
-from trace import CoverageResults
 import json
 import datetime
-from idlelib.rpc import response_queue
-from time import sleep
 
 # import fconfig
 

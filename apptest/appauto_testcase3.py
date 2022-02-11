@@ -4,9 +4,9 @@ import os
 import unittest
 import pymysql, time
 import self
-from apitest import HTMLTestRunner
-from apitest.config import getConfig
-# from config import getConfig
+from testconfig import HTMLTestRunner
+from testconfig.config import getConfig
+# from testconfig import getConfig
 from selenium.webdriver.common.by import By
 from appium import webdriver
 
@@ -25,8 +25,10 @@ class Calculator(unittest.TestCase):
 
     # 流程的相关步骤
     def test_readSQLcase(self):
-        sql = "SELECT id,`apptestobjname`,appfindmethod,appevelement,appoptmethod,apptestdata,appassertdata," \
-              "`apptestresult` from apptest_appcasestep where apptest_appcasestep.Appcase_id=1 ORDER BY id ASC "
+        sql = "SELECT id,`apptestobjname`,appfindmethod,appevelement,appoptmethod,apptestdata,appassertdata,`apptestresult` " \
+              "from apptest_appcasestep " \
+              "where apptest_appcasestep.Appcase_id=1 " \
+              "ORDER BY id ASC "
         coon = pymysql.connect(user='root', passwd='test123456', db='autotest', port=3306,
                                host=getConfig("database", "host"), charset='utf8')
         cursor = coon.cursor()
@@ -148,32 +150,4 @@ if __name__ == '__main__':
     driver.quit()
     print('Done!')
     time.sleep(5)
-#
-# def test_login(self):
-#     time.sleep(1)
-#     self.driver.find_element(by=By.XPATH,
-#                              value='//android.widget.TextView[@resource-id="net.csdn.csdnplus:id/iknow"]').click()
-#     time.sleep(1)
-#     self.driver.find_element(by=By.XPATH,
-#                              value='//android.widget.TextView[@resource-id="net.csdn.csdnplus:id/tv_tab_two"]').click()
-#     time.sleep(1)
-#     self.driver.find_element(by=By.XPATH,
-#                              value='//android.widget.EditText[@resource-id="net.csdn.csdnplus:id/et_first_account"]').send_keys(
-#         "test")
-#
-#     usn = self.driver.find_element(by=By.XPATH,
-#                                    value='//android.widget.EditText[@resource-id="net.csdn.csdnplus:id/et_second_psw"]')
-#     usn.click()
-#     usn.send_keys("test2")
-#     self.driver.find_element(by=By.XPATH,
-#                              value='//android.widget.ImageView[@resource-id="net.csdn.csdnplus:id/iv_private"]').click()
-#     self.driver.find_element(by=By.XPATH,
-#                              value='//android.widget.TextView[@resource-id="net.csdn.csdnplus:id/tv_confirm"]').click()
-#     time.sleep(5)
-#
-# def tearDown(self):
-#     self.driver.quit()
-#
-#
-# if __name__ == '__main__':
-# unittest.main()
+

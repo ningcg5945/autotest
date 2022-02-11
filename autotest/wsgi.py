@@ -1,5 +1,5 @@
 """
-WSGI config for autotest project.
+WSGI testconfig for autotest project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
